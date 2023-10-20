@@ -1,4 +1,3 @@
-/*
 # Copyright (C) 2023 Deforum LLC
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,21 +12,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-Contact the authors: https://deforum.github.io/
-*/
+# Contact the authors: https://deforum.github.io/
 
-function submit_deforum(){
-    rememberGallerySelection('deforum_gallery')
-    showSubmitButtons('deforum', false)
+import launch
+import os
 
-    var id = randomId()
-    requestProgress(id, gradioApp().getElementById('deforum_gallery_container'), gradioApp().getElementById('deforum_gallery'), function(){
-        showSubmitButtons('deforum', true)
-    })
+req_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "requirements.txt")
 
-    var res = create_submit_args(arguments)
-
-    res[0] = id
-
-    return res
-}
+with open(req_file) as file:
+    for lib in file:
+        lib = lib.strip()
+        if not launch.is_installed(lib):
+            launch.run_pip(f"install {lib}", f"Deforum requirement: {lib}")
